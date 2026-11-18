@@ -1,14 +1,14 @@
 {
-  "name": "project",
+  "name": "currency-exchange-tracker",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Currency converter with historical trend charts and saved favorites (Express, Frankfurter API, Supabase).",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Saad Alkinani",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
