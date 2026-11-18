@@ -1,17 +1,3 @@
-# INST377Final
-
-Title: Currency Exchange Tracker
-
-
-Description:
-Currency Exchange Tracker is a full-stack web application that allows users to convert currencies in real time, visualize historical exchange rate trends over custom date ranges, and save frequently used currency pairs as favorites. It is backed by a live external exchange rate API and a Supabase database for persistent storage.
-
-
-Target Browsers: This application is designed for desktop browsers 
-
-## Link to Developer Manual
-[Developer Manual](#developer-manual)
-
 # Developer Manual
 This manual is written for future developers taking over the Currency Exchange Tracker project. It assumes you are comfortable with JavaScript, Node.js, and web application concepts, but have not worked on this codebase before.
 
@@ -27,20 +13,22 @@ Make sure you have the following installed:
 ### Clone and Install
  
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
-cd YOUR_REPO
+git clone https://github.com/SAADALKINANI/currency_exchange_tracker.git
+cd currency_exchange_tracker
 npm install
 ```
  
 ### Environment Variables
  
-Create a `.env` file in the root of the project:
- 
+Copy `.env.example` to `.env` in the root of the project and fill in your values:
+
 ```
 SUPABASE_URL=https://your-project-id.supabase.co
-SUPABASE_KEY=your-anon-public-key
+SUPABASE_KEY=your-publishable-key
 ```
- 
+
+`.env` is listed in `.gitignore`. Do not commit it.
+
 You can find both values in your Supabase project under **Settings → API**.
  
 ### Supabase Table Setup
@@ -53,7 +41,17 @@ In your Supabase project, create a table called `favorites` with the following c
 | base_currency   | text    | e.g. "USD"                   |
 | target_currency | text    | e.g. "EUR"                   |
  
-If Row Level Security (RLS) is enabled, either disable it for this table or add policies that allow `SELECT`, `INSERT`, and `DELETE` for the anon role.
+Keep Row Level Security (RLS) enabled on this table. Add policies for the `anon` role that allow only the actions the app uses:
+
+```sql
+alter table favorites enable row level security;
+
+create policy "read favorites"   on favorites for select to anon using (true);
+create policy "add favorites"    on favorites for insert to anon with check (true);
+create policy "delete favorites" on favorites for delete to anon using (true);
+```
+
+These policies let anyone using the app read, add, and delete favorites, which matches the current app. Adding user accounts would let you limit each user to their own rows.
  
 ---
  
@@ -65,9 +63,9 @@ If Row Level Security (RLS) is enabled, either disable it for this table or add 
 npm start
 ```
  
-This runs `node server.js`. The server will start on `http://localhost:3000` by default.
+This runs `node server.js`. When run directly, the server listens on `http://localhost:3000` by default.
  
-Open your browser and go to `http://localhost:3000/index.html`.
+Open your browser and go to `http://localhost:3000`.
  
 ## 3. Running Tests
  
